@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/vendor/autoload.php';
 use PhpAmqpLib\Connection\AMQPStreamConnection;
+require_once 'config.php';
 
 /**
  * Inicia a conexão
@@ -11,7 +12,7 @@ $channel = $connection->channel();
 /**
  * Declara qual a fila que será usada
  */
-$channel->queue_declare('hello', false, false, false, false);
+$channel->queue_declare(Config::$queue, false, false, false, false);
 
 echo ' [*] Waiting for messages. To exit press CTRL+C', "\n";
 
@@ -25,7 +26,7 @@ $callback = function ($msg) {
 /**
  * Adiciona esse "callback" para a fila
  */
-$channel->basic_consume('hello', '', false, true, false, false, $callback);
+$channel->basic_consume(Config::$queue, '', false, true, false, false, $callback);
 
 /**
  * Mantem a função escutando a fila por tempo indeterminado, até que seja encerrada
